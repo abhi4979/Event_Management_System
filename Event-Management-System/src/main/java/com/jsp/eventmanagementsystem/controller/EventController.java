@@ -1,0 +1,195 @@
+package com.jsp.eventmanagementsystem.controller;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.jsp.eventmanagementsystem.dao.EventDao;
+import com.jsp.eventmanagementsystem.dao.OrganizerDao;
+import com.jsp.eventmanagementsystem.entity.Event;
+import com.jsp.eventmanagementsystem.entity.Event_Organizer;
+
+@Controller
+public class EventController {
+    @Autowired
+    EventDao dao;
+    @Autowired
+    OrganizerDao orgdao;
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(LocalDate.class, new java.beans.PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(LocalDate.parse(text, DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            }
+
+            @Override
+            public String getAsText() {
+                LocalDate value = (LocalDate) getValue();
+                return value != null ? value.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : "";
+            }
+        });
+
+        binder.registerCustomEditor(LocalTime.class, new java.beans.PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(LocalTime.parse(text, DateTimeFormatter.ofPattern("HH:mm")));
+            }
+
+            @Override
+            public String getAsText() {
+                LocalTime value = (LocalTime) getValue();
+                return value != null ? value.format(DateTimeFormatter.ofPattern("HH:mm")) : "";
+            }
+        });
+    }
+
+    @RequestMapping("/addevent")
+    public ModelAndView addEvent() {
+        ModelAndView mav = new ModelAndView();
+        Event event = new Event();
+        mav.addObject("eventobj", event);
+        mav.setViewName("EventForm");
+        return mav;
+    }
+    @Transactional
+    @RequestMapping("/saveevent")
+    public ModelAndView saveEvent(@ModelAttribute("eventobj") Event event, HttpSession session) {
+        
+            Integer organizer_id = (Integer) session.getAttribute("organizerinfo");
+            Event_Organizer organizer = orgdao.findById(organizer_id);
+
+            // Initialize the events list if it is null
+            if (organizer.getEvent() == null) {
+                organizer.setEvent(new ArrayList<>());
+            }
+
+            organizer.getEvent().add(event);
+
+            dao.saveEvent(event);
+            orgdao.updateOrganizer(organizer);
+
+            ModelAndView mav = new ModelAndView();
+            mav.addObject("message", "Event added successfully");
+            mav.setViewName("OrganizerOptions");
+            return mav;
+       
+        }
+    @RequestMapping("/viewevent")
+    public ModelAndView viewAllEvent(HttpSession session) {
+    	 Integer organizer_id = (Integer) session.getAttribute("organizerinfo");
+         Event_Organizer org = orgdao.findById(organizer_id);
+         if (organizer_id == null) {
+             return new ModelAndView("redirect://OrganizerLogin.jsp");
+         }
+         
+         List<Event> events =org.getEvent();
+         ModelAndView mav = new ModelAndView();
+         mav.addObject("events", events);
+         mav.setViewName("ViewAllEvent");
+         return mav;
+    }
+    @RequestMapping("/updateevent")
+    public ModelAndView updateEvent(@RequestParam("id")int id) {
+    	Event event=dao.findById(id);
+    	ModelAndView mav=new ModelAndView();
+    	mav.addObject("eventexistinginfo", event);
+    	mav.setViewName("UpdateEvent");
+    	return mav;
+    }
+   
+    @RequestMapping("/updateeventinfo")
+    public ModelAndView updateEventInfo(@ModelAttribute("eventexistinginfo")Event event) {
+    	         dao.updateEvent(event);
+    	         ModelAndView mav=new ModelAndView();
+    	         mav.addObject("message", "Event Updated Successfully");
+    	         mav.setViewName("redirect://viewevent");
+    	         return mav;
+    	        		 
+    }
+    @RequestMapping("/browseevent")
+    public ModelAndView browseEvent() {
+    	   List<Event> eventnameinfo=dao.viewAllEvent();
+    	   ModelAndView mav=new ModelAndView();
+    	   mav.addObject("alleventlist", eventnameinfo); // Assuming events is your List<Event>
+
+    	   mav.setViewName("SearchEvent");
+    	   return mav;
+    }
+    @RequestMapping("/vieweventlist")
+    public ModelAndView viewEvent(ServletRequest request) {
+        String location = request.getParameter("location");
+        String dateStr = request.getParameter("date");
+        String type = request.getParameter("type");
+
+        LocalDate date = null;
+        if (dateStr != null && !dateStr.isEmpty()) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            date = LocalDate.parse(dateStr, formatter);
+        }
+
+        List<Event> eventlist = dao.viewSearchEvent(location, date, type);
+
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("eventlist", eventlist); // Add events to the model
+        mav.setViewName("ViewEventList"); // Set view name
+
+        return mav;
+    }
+    
+    
+    @RequestMapping("/filtereventinfo")
+    public ModelAndView viewFilterEvents(ServletRequest request) {
+    	  ModelAndView mav = new ModelAndView();
+          try {
+              String minCostStr = request.getParameter("mincost");
+              String maxCostStr = request.getParameter("maxcost");
+
+              Double minPrice = minCostStr != null && !minCostStr.isEmpty() ? Double.parseDouble(minCostStr.trim()) : null;
+              Double maxPrice = maxCostStr != null && !maxCostStr.isEmpty() ? Double.parseDouble(maxCostStr.trim()) : null;
+
+              if (minPrice == null || maxPrice == null) {
+                  mav.addObject("message", "Please provide both minimum and maximum cost.");
+                  mav.setViewName("errorPage");
+                  return mav;
+              }
+
+              List<Event> events = dao.viewFilterEvent(minPrice, maxPrice);
+              if (events != null && !events.isEmpty()) {
+                  mav.addObject("filterlist", events);
+                  mav.setViewName("FilterByPrice");
+              } else {
+                  mav.addObject("message", "No Event Found");
+                  mav.setViewName("errorPage");
+              }
+          } catch (NumberFormatException e) {
+              mav.addObject("message", "Invalid price format. Please enter valid numbers.");
+              mav.setViewName("errorPage");
+          }
+          return mav;
+      }
+    @RequestMapping("/organizerlogout")
+    public ModelAndView organizerLogout(HttpSession session) {
+    	session.invalidate();
+    	ModelAndView mav=new ModelAndView();
+    	mav.addObject("message", "Logout Successfully");
+    	mav.setViewName("OrganizerHome");
+    	return mav;
+    }
+    }
