@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSession;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.jsp.eventmanagementsystem.dao.EventDao;
 import com.jsp.eventmanagementsystem.dao.OrganizerDao;
 import com.jsp.eventmanagementsystem.entity.Event;
@@ -81,7 +81,7 @@ public class EventController {
             }
 
             organizer.getEvent().add(event);
-
+            event.setOrganizer(organizer);
             dao.saveEvent(event);
             orgdao.updateOrganizer(organizer);
 
@@ -106,7 +106,7 @@ public class EventController {
          return mav;
     }
     @RequestMapping("/updateevent")
-    public ModelAndView updateEvent(@RequestParam("id")int id) {
+    public ModelAndView updateEvent(@RequestParam("id")int id,HttpSession session) {
     	Event event=dao.findById(id);
     	ModelAndView mav=new ModelAndView();
     	mav.addObject("eventexistinginfo", event);
@@ -115,14 +115,53 @@ public class EventController {
     }
    
     @RequestMapping("/updateeventinfo")
-    public ModelAndView updateEventInfo(@ModelAttribute("eventexistinginfo")Event event) {
-    	         dao.updateEvent(event);
-    	         ModelAndView mav=new ModelAndView();
-    	         mav.addObject("message", "Event Updated Successfully");
-    	         mav.setViewName("redirect://viewevent");
-    	         return mav;
-    	        		 
+    public ModelAndView updateEventInfo(@ModelAttribute("eventexistinginfo") Event updatedEvent) {
+      
+
+        // Load the existing event from the database
+        Event existingEvent = dao.findById(updatedEvent.getEvent_id());
+        if (existingEvent == null) {
+            return new ModelAndView("errorPage").addObject("message", "Event not found");
+        }
+
+        existingEvent.setName(updatedEvent.getName());
+        existingEvent.setDescription(updatedEvent.getDescription());
+        existingEvent.setDate(updatedEvent.getDate());
+        existingEvent.setTime(updatedEvent.getTime());
+        existingEvent.setLocation(updatedEvent.getLocation());
+        existingEvent.setAvl_ticket(updatedEvent.getAvl_ticket());
+        existingEvent.setTicket_price(updatedEvent.getTicket_price());
+        existingEvent.setType(updatedEvent.getType());
+      
+        dao.updateEvent(existingEvent);
+
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("message", "Event Updated Successfully");
+        mav.setViewName("redirect:/viewevent");  // Corrected URL syntax
+        return mav;
     }
+    
+    @RequestMapping("/delete")
+    public ModelAndView deleteProduct(@RequestParam("id") int id, HttpSession session) {
+        
+        	 Integer organizer_id = (Integer) session.getAttribute("organizerinfo");
+             Event_Organizer org = orgdao.findById(organizer_id);
+            List<Event> events = org.getEvent();
+            List<Event> eventList = events.stream().filter(event -> event.getEvent_id() != id).collect(Collectors.toList());
+            org.setEvent(eventList);
+            
+            orgdao.updateOrganizer(org);
+            dao.deleteById(id);
+            
+            ModelAndView mav = new ModelAndView();
+            mav.addObject("message", "product deleted Successfully");
+            mav.setViewName("redirect://viewevent");
+            return mav;
+        
+    }
+
+   
+
     @RequestMapping("/browseevent")
     public ModelAndView browseEvent() {
     	   List<Event> eventnameinfo=dao.viewAllEvent();

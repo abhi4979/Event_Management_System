@@ -45,7 +45,7 @@ public class UserController {
 		            
 		            if (user != null) {
 		                mav.setViewName("UserOptions");
-		                session.setAttribute("userinfo", user);
+		                session.setAttribute("userinfo", user.getUser_id());
 		            } else {
 		                mav.addObject("message", "Invalid credentials");
 		                mav.setViewName("UserLogin");

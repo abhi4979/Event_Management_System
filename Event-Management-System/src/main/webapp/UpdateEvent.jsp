@@ -9,8 +9,9 @@
 </head>
 <body>
 <h2>Event Form</h2>
-    <form:form action="updateeventinfo" modelAttribute="eventexistinginfo" id="myevent">
+    <form:form action="updateeventinfo" modelAttribute="eventexistinginfo" id="myevent" method="post">
         <table>
+              <form:hidden path="event_id" />
             <tr>
                 <td>Name:</td>
                 <td><form:input path="name" readonly="true"/></td>

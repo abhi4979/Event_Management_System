@@ -1,5 +1,6 @@
 package com.jsp.eventmanagementsystem.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -31,14 +32,25 @@ public class Event_Organizer {
     private String company_name;
     private String password;
     
-    @OneToMany
+    @OneToMany(mappedBy = "organizer")
     @Cascade(CascadeType.ALL)
-    private List<Event> event;
+    private List<Event> events = new ArrayList<>();
     
     @OneToMany
     private List<User> user;
+    
+    @OneToMany 
+    private List<Payment> payment;
 
-    // Getters and Setters
+    public List<Payment> getPayment() {
+		return payment;
+	}
+
+	public void setPayment(List<Payment> payment) {
+		this.payment = payment;
+	}
+
+	// Getters and Setters
     public int getOrg_id() {
         return org_id;
     }
@@ -88,18 +100,12 @@ public class Event_Organizer {
     }
 
     public List<Event> getEvent() {
-        return event;
+        return events;
     }
 
     public void setEvent(List<Event> event) {
-        this.event = event;
+        this.events = event;
     }
 
-    public List<User> getUser() {
-        return user;
-    }
-
-    public void setUser(List<User> user) {
-        this.user = user;
-    }
+  
 }

@@ -11,7 +11,7 @@
 <div>
  <a href="addevent">Add Event</a><br>
  <a href="viewevent">View All Events</a>
- <a>View All Users booking for events</a>
+ <a href="viewalluser">View All Users booking for events</a>
 </div>
 </body>
 </html>

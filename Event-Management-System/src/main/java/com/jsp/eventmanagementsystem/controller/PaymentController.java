@@ -1,6 +1,8 @@
 package com.jsp.eventmanagementsystem.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
@@ -12,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jsp.eventmanagementsystem.dao.EventDao;
+import com.jsp.eventmanagementsystem.dao.OrganizerDao;
 import com.jsp.eventmanagementsystem.dao.PaymentDao;
+import com.jsp.eventmanagementsystem.dao.UserDao;
 import com.jsp.eventmanagementsystem.entity.Event;
+import com.jsp.eventmanagementsystem.entity.Event_Organizer;
 import com.jsp.eventmanagementsystem.entity.Payment;
 import com.jsp.eventmanagementsystem.entity.User;
 
@@ -25,13 +30,20 @@ public class PaymentController {
 
     @Autowired
     EventDao eventdao;
+    
+    @Autowired
+    OrganizerDao orgdao;
+    
+    @Autowired
+    UserDao userdao;
 
     @RequestMapping("/bookevent")
     public ModelAndView bookEvent(@RequestParam(value = "id", required = true) String idStr, HttpSession session) {
         Integer id = null;
         id = Integer.parseInt(idStr);
         System.out.println("Received id: " + id);
-        User user = (User) session.getAttribute("userinfo");
+        Integer user_id = (Integer) session.getAttribute("userinfo");
+        User user=userdao.findById(user_id);
         if (user == null) {
             System.out.println("User not found in session.");
             return new ModelAndView("redirect:/login"); // Handle error appropriately
@@ -47,7 +59,7 @@ public class PaymentController {
         payment.setAmount(event.getTicket_price());
         payment.setQuantity(1);
         payment.setStatus("UnSuccessful");
-
+        session.setAttribute("eventinfo", event.getEvent_id());
         session.setAttribute("paymentinfo", payment);
         ModelAndView mav = new ModelAndView();
         mav.addObject("paymentobj", payment);
@@ -58,6 +70,10 @@ public class PaymentController {
     @RequestMapping("/savepayment")
     public ModelAndView savePayment(@ModelAttribute("paymentobj") Payment payment, HttpSession session) {
         Payment sessionPayment = (Payment) session.getAttribute("paymentinfo");
+        Integer user=(Integer)session.getAttribute("userinfo");
+        Integer event=(Integer)session.getAttribute("eventinfo");
+         User user_id=userdao.findById(user);
+         Event event_id=eventdao.findById(event);
 
         if (sessionPayment == null) {
             System.out.println("Payment info not found in session.");
@@ -69,6 +85,8 @@ public class PaymentController {
         sessionPayment.setAmount(sessionPayment.getAmount() * payment.getQuantity());
 
         // Save payment to database
+        sessionPayment.setUser(user_id);
+        sessionPayment.setEvent(event_id);
         paymentdao.savePayment(sessionPayment);
 
 
@@ -77,13 +95,48 @@ public class PaymentController {
         mav.setViewName("PaymentConfirmation");
         return mav;
     }
-    @RequestMapping("/confirmpayment")
-    public ModelAndView confirmPayment(HttpSession session) {
+    	@RequestMapping("/confirmpayment")
+    	public ModelAndView confirmPayment(HttpSession session) {
+    	    Payment sessionPayment = (Payment) session.getAttribute("paymentinfo");
 
-         session.removeAttribute("paymentinfo");
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("message", "Payment Successful");
-        mav.setViewName("ConfirmPayment");
-        return mav;
-    }
+    	    if (sessionPayment != null) {
+    	        sessionPayment.setStatus("Successful");
+    	        paymentdao.updateEvent(sessionPayment);  // Assuming update is the correct method
+
+    	        Event event = sessionPayment.getEvent();
+    	        if (event != null) {
+    	            event.getPayments().add(sessionPayment); // Add payment to event's payment list
+    	           
+    	        }
+    	    }
+
+    	    session.removeAttribute("paymentinfo");
+
+    	    ModelAndView mav = new ModelAndView();
+    	    mav.addObject("message", "Payment Successful");
+    	    mav.setViewName("ConfirmPayment");
+    	    return mav;
+    	}
+
+    
+
+
+    	@RequestMapping("/viewalluser")
+    	public ModelAndView viewAllUser(HttpSession session) {
+    	    Integer organizer_id = (Integer) session.getAttribute("organizerinfo");
+    	    if (organizer_id == null) {
+    	        return new ModelAndView("redirect:/OrganizerLogin.jsp");
+    	    }
+    	    
+    	    Event_Organizer org = orgdao.findById(organizer_id);
+    	    List<Payment> payments = org.getEvent().stream()
+    	        .flatMap(event -> event.getPayments().stream())
+    	        .collect(Collectors.toList());
+    	    
+    	    ModelAndView mav = new ModelAndView();
+    	    mav.addObject("paymentinformation", payments);
+    	    mav.setViewName("ShowBookedUserList");
+    	    return mav;
+    	}
+
 }

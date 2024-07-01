@@ -2,6 +2,7 @@ package com.jsp.eventmanagementsystem.entity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,11 +34,23 @@ public class Event {
     @Cascade(CascadeType.ALL)
     private List<User> users;
 
-    @OneToMany
+    @OneToMany(mappedBy = "event")
     @Cascade(CascadeType.ALL)
-    private List<Payment> payments;
+    private List<Payment> payments = new ArrayList<>();
+    
+    @ManyToOne
+    @JoinColumn(name = "organizer_id", nullable = false)
+    private Event_Organizer organizer;
 
-    // Getters and Setters
+    public Event_Organizer getOrganizer() {
+		return organizer;
+	}
+
+	public void setOrganizer(Event_Organizer organizer) {
+		this.organizer = organizer;
+	}
+
+	// Getters and Setters
     public int getEvent_id() {
         return event_id;
     }

@@ -1,8 +1,11 @@
 package com.jsp.eventmanagementsystem.dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -41,5 +44,11 @@ public class PaymentDao {
 		et.begin();
 		em.remove(findById(id));
 		et.commit();
+	}
+	public List<Payment> viewAllPayament(){
+		Query query= em.createQuery("select p from Payment p");
+		List<Payment> payment=query.getResultList();
+		return payment;
+		
 	}
 }
