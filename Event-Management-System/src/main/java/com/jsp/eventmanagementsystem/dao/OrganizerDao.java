@@ -1,5 +1,7 @@
 package com.jsp.eventmanagementsystem.dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -56,6 +58,13 @@ public class OrganizerDao {
 				return null;
 			}
 		}
-
-
+      public List<Event_Organizer> fetchUnapprovedOrganizers() {
+    	  Query query=em.createQuery("select a from Event_Organizer a where a.status='Not Approved'");
+    	  return (List<Event_Organizer>)query.getResultList();
+      }
+      public List<Event_Organizer> viewAllEventOrganizers() {
+    	  Query query=em.createQuery("select a from Event_Organizer a");
+    	  return query.getResultList();
+      }
+      
 	}

@@ -30,7 +30,7 @@ public class Event {
     private Double ticket_price;
     private String type;
 
-    @ManyToMany(mappedBy = "events")
+    @ManyToMany(mappedBy = "eventlist")
     @Cascade(CascadeType.ALL)
     private List<User> users;
 

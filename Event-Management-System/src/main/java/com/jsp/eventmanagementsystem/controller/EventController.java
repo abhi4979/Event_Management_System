@@ -23,6 +23,7 @@ import com.jsp.eventmanagementsystem.dao.EventDao;
 import com.jsp.eventmanagementsystem.dao.OrganizerDao;
 import com.jsp.eventmanagementsystem.entity.Event;
 import com.jsp.eventmanagementsystem.entity.Event_Organizer;
+import com.jsp.eventmanagementsystem.entity.User;
 
 @Controller
 public class EventController {
@@ -76,11 +77,11 @@ public class EventController {
             Event_Organizer organizer = orgdao.findById(organizer_id);
 
             // Initialize the events list if it is null
-            if (organizer.getEvent() == null) {
-                organizer.setEvent(new ArrayList<>());
+            if (organizer.getEvents() == null) {
+                organizer.setEvents(new ArrayList<>());
             }
 
-            organizer.getEvent().add(event);
+            organizer.getEvents().add(event);
             event.setOrganizer(organizer);
             dao.saveEvent(event);
             orgdao.updateOrganizer(organizer);
@@ -99,7 +100,7 @@ public class EventController {
              return new ModelAndView("redirect://OrganizerLogin.jsp");
          }
          
-         List<Event> events =org.getEvent();
+         List<Event> events =org.getEvents();
          ModelAndView mav = new ModelAndView();
          mav.addObject("events", events);
          mav.setViewName("ViewAllEvent");
@@ -142,13 +143,13 @@ public class EventController {
     }
     
     @RequestMapping("/delete")
-    public ModelAndView deleteProduct(@RequestParam("id") int id, HttpSession session) {
+    public ModelAndView deleteEvent(@RequestParam("id") int id, HttpSession session) {
         
         	 Integer organizer_id = (Integer) session.getAttribute("organizerinfo");
              Event_Organizer org = orgdao.findById(organizer_id);
-            List<Event> events = org.getEvent();
+            List<Event> events = org.getEvents();
             List<Event> eventList = events.stream().filter(event -> event.getEvent_id() != id).collect(Collectors.toList());
-            org.setEvent(eventList);
+            org.setEvents(eventList);
             
             orgdao.updateOrganizer(org);
             dao.deleteById(id);
@@ -231,4 +232,61 @@ public class EventController {
     	mav.setViewName("OrganizerHome");
     	return mav;
     }
-    }
+    
+    @RequestMapping("/vieweventbyadmin")
+	public ModelAndView ViewAllEvent() {
+		 List<Event> event=dao.viewAllEvent();
+		 ModelAndView mav=new ModelAndView();
+		 mav.addObject("eventbyadmin", event);
+		 mav.setViewName("ViewAllEventList");
+		 return mav;
+	}
+	@RequestMapping("/updateeventbyadmin")
+	public ModelAndView updateUser(@RequestParam("id")int id) {
+		ModelAndView mav=new ModelAndView();
+		Event event=dao.findById(id);
+		if(event == null) {
+			mav.addObject("message", "User not found");
+			mav.setViewName("errorPage");
+		}
+		mav.addObject("eventexistinginformation", event);
+		mav.setViewName("UpdateEventByAdmin");
+		return mav;
+	}
+	
+	@RequestMapping("/updateeventinformation")
+	public ModelAndView updateUserInfo(@ModelAttribute("eventexistinginformation")Event e) {
+		Event existingEvent = dao.findById(e.getEvent_id());
+        if (existingEvent == null) {
+            return new ModelAndView("errorPage").addObject("message", "Event not found");
+        }
+
+        existingEvent.setName(e.getName());
+        existingEvent.setDescription(e.getDescription());
+        existingEvent.setDate(e.getDate());
+        existingEvent.setTime(e.getTime());
+        existingEvent.setLocation(e.getLocation());
+        existingEvent.setAvl_ticket(e.getAvl_ticket());
+        existingEvent.setTicket_price(e.getTicket_price());
+        existingEvent.setType(e.getType());
+      
+        dao.updateEvent(existingEvent);
+
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("message", "Event Updated Successfully");
+        mav.setViewName("redirect:/vieweventbyadmin");  // Corrected URL syntax
+        return mav;
+	}
+	 @RequestMapping("/deleteevent")
+	    public ModelAndView deleteProduct(@RequestParam("id") int id, HttpSession session) {
+	            dao.deleteById(id);
+	            
+	            ModelAndView mav = new ModelAndView();
+	            mav.addObject("message", "Event deleted Successfully");
+	            mav.setViewName("redirect://vieweventbyadmin");
+	            return mav;
+	        
+	    }
+	   
+    	}
+    

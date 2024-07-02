@@ -31,25 +31,16 @@ public class Event_Organizer {
     
     private String company_name;
     private String password;
+    private String status;
     
     @OneToMany(mappedBy = "organizer")
     @Cascade(CascadeType.ALL)
     private List<Event> events = new ArrayList<>();
     
-    @OneToMany
-    private List<User> user;
     
-    @OneToMany 
-    private List<Payment> payment;
-
-    public List<Payment> getPayment() {
-		return payment;
-	}
-
-	public void setPayment(List<Payment> payment) {
-		this.payment = payment;
-	}
-
+    
+  
+  
 	// Getters and Setters
     public int getOrg_id() {
         return org_id;
@@ -99,13 +90,21 @@ public class Event_Organizer {
         this.password = password;
     }
 
-    public List<Event> getEvent() {
-        return events;
-    }
+    public String getStatus() {
+		return status;
+	}
 
-    public void setEvent(List<Event> event) {
-        this.events = event;
-    }
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public List<Event> getEvents() {
+		return events;
+	}
+
+	public void setEvents(List<Event> events) {
+		this.events = events;
+	}
 
   
 }

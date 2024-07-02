@@ -9,12 +9,12 @@
 </head>
 <body>
 <h2>Event Form</h2>
-    <form:form action="updateeventinfo" modelAttribute="eventexistinginfo" id="myevent" method="post">
+    <form:form action="updateeventinformation" modelAttribute="eventexistinginformation" id="myevent" method="post">
         <table>
               <form:hidden path="event_id" />
             <tr>
                 <td>Name:</td>
-                <td><form:input path="name" readonly="true"/></td>
+                <td><form:input path="name" /></td>
             </tr>
             <tr>
                 <td>Description:</td>
@@ -41,8 +41,7 @@
                 <td><form:input path="ticket_price" type="number" step="0.01" /></td>
             </tr>
             <tr>
-              <td>Type</td>
-               <td>
+               <td>Type</td>
                     <form:select path="type">
                         <form:option value="public" label="Public"/>
                         <form:option value="private" label="Private"/>

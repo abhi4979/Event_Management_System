@@ -129,7 +129,7 @@ public class PaymentController {
     	    }
     	    
     	    Event_Organizer org = orgdao.findById(organizer_id);
-    	    List<Payment> payments = org.getEvent().stream()
+    	    List<Payment> payments = org.getEvents().stream()
     	        .flatMap(event -> event.getPayments().stream())
     	        .collect(Collectors.toList());
     	    
@@ -138,5 +138,45 @@ public class PaymentController {
     	    mav.setViewName("ShowBookedUserList");
     	    return mav;
     	}
-
+    	
+    	@RequestMapping("/paymentlist")
+    	public ModelAndView paymentList() {
+    	  List<Payment> p=paymentdao.viewAllPayament();
+    	  ModelAndView mav=new ModelAndView();
+    	  mav.addObject("payobj", p);
+    	  mav.setViewName("ViewPaymentByAdmin");
+    	  return mav;
+    	}
+      
+    	@RequestMapping("/updatep")
+    	public ModelAndView updatePayment(@RequestParam("id")int id) {
+    		Payment p=paymentdao.findById(id);
+    		ModelAndView mav=new ModelAndView();
+    		mav.addObject("paymentobject", p);
+    		mav.setViewName("UpdatePaymentList");
+    		return mav;
+    		
+    	}
+    	@RequestMapping("/updatepaymentinfo")
+    	public ModelAndView upadetPaymentInfo(@ModelAttribute("paymentobject")Payment p) {
+    		Payment payment=paymentdao.findById(p.getPayment_id());
+    		payment.setUsername(p.getUsername());
+    		payment.setEventname(p.getEventname());
+    		payment.setQuantity(p.getQuantity());
+    		payment.setAmount(p.getAmount());
+    		payment.setStatus(p.getStatus());
+    		paymentdao.updateEvent(payment);
+    		ModelAndView mav=new ModelAndView();
+    		mav.addObject("message", "Updated Successfully");
+    		mav.setViewName("redirect://paymentlist");
+    		return mav;
+    	}
+    	@RequestMapping("/deletep")
+    	public ModelAndView deletePayment(@RequestParam("id")int id) {
+    		paymentdao.deleteById(id);
+    		ModelAndView mav=new ModelAndView();
+    		mav.addObject("message", "Deleted Successfully");
+    		mav.setViewName("redirect://paymentlist");
+    		return mav;
+    	}
 }

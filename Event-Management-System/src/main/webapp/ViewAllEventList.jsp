@@ -1,5 +1,5 @@
-<%@page import="com.jsp.eventmanagementsystem.entity.Event"%>
 <%@page import="java.util.List"%>
+<%@page import="com.jsp.eventmanagementsystem.entity.Event"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1" isELIgnored="false"%>
 <!DOCTYPE html>
@@ -10,9 +10,9 @@
 </head>
 <body>
 <div align="center">
-		<h1>Product Management</h1>
+		<h1>Event List</h1>
 		${message}
-		<% List<Event> events = (List<Event>) request.getAttribute("eventlist"); %>
+		<% List<Event> events = (List<Event>) request.getAttribute("eventbyadmin"); %>
 		<table border="1">
 			<tr>
 				<th>Name</th>
@@ -23,12 +23,12 @@
 				<th>Available Tickets</th>
 				<th>Ticket Price</th>
 				<th>Type</th>
-				<th>Book Ticket</th>
+				<th>Update</th>
+				<th>Delete</th>
 			</tr>
 			<% if (events != null) { 
                for (Event event : events) { %>
 			<tr>
-			   
 				<td><%= event.getName() %></td>
 				<td><%= event.getDescription() %></td>
 				<td><%= event.getDate() %></td>
@@ -37,15 +37,15 @@
 				<td><%= event.getAvl_ticket() %></td>
 				<td><%= event.getTicket_price() %></td>
 				<td><%= event.getType() %></td>
-				<td><a href="bookevent?id=<%= event.getEvent_id() %>">Book</a></td>
-
+				<td><a href="updateeventbyadmin?id=<%= event.getEvent_id() %>">Update</a></td>
+				<td><a href="deleteevent?id=<%= event.getEvent_id() %>">Delete</a></td>
 			</tr>
 			<%   } 
            } %>
 		</table>
 		<div class="links">
-			<a href="UserOptions.jsp">Back to main menu</a> <a
-				href="userlogout">Log Out</a>
+			<a href="adminoptions.jsp">Back to main menu</a> <a
+				href="adminlogout">Log Out</a>
 		</div>
 </body>
 </html>

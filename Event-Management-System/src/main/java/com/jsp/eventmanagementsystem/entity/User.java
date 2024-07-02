@@ -28,7 +28,7 @@ public class User {
 
     @ManyToMany
     @Cascade(CascadeType.ALL)
-    private List<Event> events;
+    private List<Event> eventlist;
 
     @OneToMany
     @Cascade(CascadeType.ALL)
@@ -88,11 +88,11 @@ public class User {
     }
 
     public List<Event> getEvents() {
-        return events;
+        return eventlist;
     }
 
     public void setEvents(List<Event> events) {
-        this.events = events;
+        this.eventlist = events;
     }
 
     public List<Payment> getPayments() {

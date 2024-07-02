@@ -41,7 +41,12 @@
             </tr>
             <tr>
                 <td>Type:</td>
-                <td><form:input path="type" /></td>
+                <td>
+                    <form:select path="type">
+                        <form:option value="public" label="Public"/>
+                        <form:option value="private" label="Private"/>
+                    </form:select>
+                </td>
             </tr>
             <tr>
                 <td colspan="2"><input type="submit" value="Submit" /></td>

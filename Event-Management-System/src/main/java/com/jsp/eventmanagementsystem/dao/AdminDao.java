@@ -1,7 +1,5 @@
 package com.jsp.eventmanagementsystem.dao;
 
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -10,11 +8,12 @@ import javax.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.jsp.eventmanagementsystem.entity.Event_Organizer;
-import com.jsp.eventmanagementsystem.entity.User;
+import com.jsp.eventmanagementsystem.entity.Admin;
+
 
 @Repository
-public class UserDao {
+public class AdminDao {
+
 	@Autowired
 	EntityManagerFactory emf;
 
@@ -24,20 +23,20 @@ public class UserDao {
 	@Autowired
 	EntityTransaction et;
 
-	public void saveUser(User user) {
+	public void saveAdmin(Admin admin) {
 		et.begin();
-		em.persist(user);
+		em.persist(admin);
 		et.commit();
 	}
 
-	public User findById(int id) {
-		return em.find(User.class, id);
+	public Admin findById(int id) {
+		return em.find(Admin.class, id);
 	}
 
-	public void updateUser(User user) {
+	public void updateAdmin(Admin admin) {
 		et.begin();
-		em.merge(user);
-		et.commit();
+		em.merge(admin);
+		et.begin();
 	}
 
 	public void deleteById(int id) {
@@ -47,20 +46,18 @@ public class UserDao {
 		et.commit();
 	}
 
-	public User login(String email, String password) {
-		Query query = em.createQuery("select a from User a where a.email=?1 and a.password=?2");
+	public Admin login(String email, String password) {
+		Query query = em.createQuery("select a from Admin a where a.email=?1 and a.password=?2");
 		query.setParameter(1, email);
 		query.setParameter(2, password);
 		try {
-			User user = (User) query.getSingleResult();
-			return user;
+			Admin admin = (Admin) query.getSingleResult();
+			return admin;
 		} catch (Exception e) {
 			return null;
 		}
 	}
-	public List<User> viewAllUsers(){
-		Query query=em.createQuery("select u from User u");
-		return query.getResultList();
-	}
+
 
 }
+
