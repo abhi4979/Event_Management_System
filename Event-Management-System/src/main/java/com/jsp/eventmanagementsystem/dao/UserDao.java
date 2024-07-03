@@ -10,6 +10,7 @@ import javax.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.jsp.eventmanagementsystem.entity.Admin;
 import com.jsp.eventmanagementsystem.entity.Event_Organizer;
 import com.jsp.eventmanagementsystem.entity.User;
 
@@ -61,6 +62,18 @@ public class UserDao {
 	public List<User> viewAllUsers(){
 		Query query=em.createQuery("select u from User u");
 		return query.getResultList();
+	}
+	public User forgotPassword(String email,Long mob) {
+		Query query=em.createQuery("select a from User a where a.email=?1 and a.mobilenumber=?2");
+		query.setParameter(1, email);
+		query.setParameter(2, mob);
+		try {
+			User  user = (User) query.getSingleResult();
+			return user;
+		} catch (Exception e) {
+			return null;
+		}
+		
 	}
 
 }

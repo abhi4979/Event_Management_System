@@ -1,21 +1,118 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" isELIgnored="false"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<meta charset="UTF-8">
+<title>User Login Form</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 60%;
+        max-width: 1000px;
+        background-color: #00FFFF;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 50px;
+        border-radius: 10px;
+    }
+    .login-container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        width: 300px;
+        text-align: center;
+    }
+    .login-container h1 {
+        margin-top: 0;
+        color: #333;
+    }
+    .login-container form {
+        display: flex;
+        flex-direction: column;
+    }
+    .login-container form input[type="email"],
+    .login-container form input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+    .login-container form input[type="submit"] {
+        width: 100%;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .login-container form input[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+    .forgot-password {
+        text-align: center;
+        margin-top: 10px;
+    }
+    .forgot-password a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    .forgot-password a:hover {
+        text-decoration: underline;
+    }
+    .content {
+        background-color: #00FFFF;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        width: 400px;
+        margin-left: 20px; /* Adjust margin as needed */
+    }
+    .content h2 {
+        color: #333;
+    }
+    .content p {
+        color: #666;
+        line-height: 1.6;
+    }
+</style>
 </head>
 <body>
-<h1>${message}</h1>
-<h1>User Login Form</h1>
-		<form action="userloginvalidate" method="post">
-			<input type="email" name="email" id="email" placeholder="Enter Your email"
-				required="required"><br> <input type="password"
-				name="password" placeholder="Enter Password" required="required"><br>
+    <div class="container">
+        <div class="login-container">
+            <h1>${message}</h1>
+            <h2>User Login Form</h2>
+            <form action="userloginvalidate" method="post">
+                <input type="email" name="email" id="email" placeholder="Enter Your email" required><br>
+                <input type="password" name="password" placeholder="Enter Password" required><br>
 
-			<input type="submit" value="Login" id="btn">
-
-		</form>
+                <input type="submit" value="Login">
+                <div class="forgot-password">
+                    <a href="ForgotByUser.jsp">Forgot Password?</a>
+                </div>
+            </form>
+        </div>
+        <div class="content">
+            <h2>Users in Eventify</h2>
+            <p>Users are the lifeblood of any system, product, or service. Understanding their needs, behaviors, and preferences is crucial for designing effective solutions and experiences. A user-centric approach revolves around putting users at the forefront of design and development processes.</p>
+        </div>
+    </div>
 </body>
 </html>

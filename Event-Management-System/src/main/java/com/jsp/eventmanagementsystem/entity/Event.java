@@ -29,6 +29,18 @@ public class Event {
     private int avl_ticket;
     private Double ticket_price;
     private String type;
+    
+    private String imageUrl;
+
+    // Getters and Setters
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
 
     @ManyToMany(mappedBy = "eventlist")
     @Cascade(CascadeType.ALL)

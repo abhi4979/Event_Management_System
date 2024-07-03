@@ -6,44 +6,53 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>Event Management</title>
+<style>
+    .event {
+        border: 1px solid #000;
+        padding: 15px;
+        margin: 15px;
+        width: 300px;
+        display: inline-block;
+        vertical-align: top;
+    }
+    .event img {
+        height: 200px;
+        width: 300px;
+    }
+    .links {
+        margin-top: 20px;
+    }
+</style>
 </head>
 <body>
 <div align="center">
-		<h1>Product Management</h1>
-		${message}
-		<% List<Event> events = (List<Event>) request.getAttribute("events"); %>
-		<table border="1">
-			<tr>
-				<th>Name</th>
-				<th>Description</th>
-				<th>Date</th>
-				<th>Time</th>
-				<th>Location</th>
-				<th>Available Tickets</th>
-				<th>Ticket Price</th>
-				<th>Type</th>
-			</tr>
-			<% if (events != null) { 
-               for (Event event : events) { %>
-			<tr>
-				<td><%= event.getName() %></td>
-				<td><%= event.getDescription() %></td>
-				<td><%= event.getDate() %></td>
-				<td><%= event.getTime() %></td>
-				<td><%= event.getLocation() %></td>
-				<td><%= event.getAvl_ticket() %></td>
-				<td><%= event.getTicket_price() %></td>
-				<td><%= event.getType() %></td>
-				<td><a href="updateevent?id=<%= event.getEvent_id() %>">Update</a></td>
-				<td><a href="delete?id=<%= event.getEvent_id() %>">Delete</a></td>
-			</tr>
-			<%   } 
-           } %>
-		</table>
-		<div class="links">
-			<a href="OrganizerOptions.jsp">Back to main menu</a> <a
-				href="organizerlogout">Log Out</a>
-		</div>
+    <h1>Event Management</h1>
+    ${message}
+    <% List<Event> events = (List<Event>) request.getAttribute("events"); %>
+    <% if (events != null) { 
+        for (Event event : events) { %>
+            <div class="event">
+                <div><img src="<%= event.getImageUrl() %>" alt="Event Image"></div>
+                <h2><%= event.getName() %></h2>
+                <p><strong>Description:</strong> <%= event.getDescription() %></p>
+                <p><strong>Date:</strong> <%= event.getDate() %></p>
+                <p><strong>Time:</strong> <%= event.getTime() %></p>
+                <p><strong>Location:</strong> <%= event.getLocation() %></p>
+                <p><strong>Available Tickets:</strong> <%= event.getAvl_ticket() %></p>
+                <p><strong>Ticket Price:</strong> <%= event.getTicket_price() %></p>
+                <p><strong>Type:</strong> <%= event.getType() %></p>
+                <p>
+                    <a href="updateevent?id=<%= event.getEvent_id() %>">Update</a> |
+                    <a href="delete?id=<%= event.getEvent_id() %>">Delete</a>
+                </p>
+            </div>
+    <%   } 
+       } %>
+    <div class="links">
+        <a href="OrganizerOptions.jsp">Back to main menu</a> 
+        <a href="organizerlogout">Log Out</a>
+    </div>
+</div>
 </body>
 </html>

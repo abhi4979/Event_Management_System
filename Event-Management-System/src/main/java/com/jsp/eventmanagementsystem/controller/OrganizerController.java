@@ -132,4 +132,40 @@ public class OrganizerController {
 		 mav.setViewName("redirect://viewallorganizers");
 		 return mav;
 	 }
+	 @RequestMapping("/forgotpasswordbyorg")
+	    public ModelAndView forgotPassword(ServletRequest request,HttpSession session) {
+	        String email = request.getParameter("email");
+	        Long mob = Long.parseLong(request.getParameter("mobilenumber")); // Corrected parameter name
+	        ModelAndView mav = new ModelAndView();
+	        Event_Organizer user = dao.forgotPassword(email, mob);
+	        if (user != null) {
+	            mav.setViewName("PassObjByOrg");
+	            session.setAttribute("orgid", user.getOrg_id());
+	        } else {
+	            mav.addObject("message", "Invalid Credential");
+	            mav.setViewName("ForgotByOrg");
+	        }
+	        return mav;
+	    }
+	    @RequestMapping("/newpbyorg")
+	    public ModelAndView newP() {
+	    	User a =new User();
+	    	ModelAndView mav=new ModelAndView();
+	    	mav.addObject("passwordobj", a);
+	    	mav.setViewName("PasswordCreateByOrg");
+	    	return mav;
+	    }
+	    @RequestMapping("/savepasswordbyorg")
+	    public ModelAndView savePassword(@ModelAttribute("passwordobj")Event_Organizer a,HttpSession session) {
+	    	Integer orgid=(Integer) session.getAttribute("orgid");
+	    	Event_Organizer org=dao.findById(orgid);
+	    	org.setPassword(a.getPassword());
+	    	dao.updateOrganizer(org);
+	    	session.removeAttribute("orgid");
+	    	ModelAndView mav=new ModelAndView();
+	    	mav.addObject("message", "Password Created Successfully");
+	    	mav.setViewName("OrganizerLogin");
+	    	return mav;
+	    }
+	
 }

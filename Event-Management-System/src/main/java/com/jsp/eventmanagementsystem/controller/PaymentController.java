@@ -98,18 +98,23 @@ public class PaymentController {
     	@RequestMapping("/confirmpayment")
     	public ModelAndView confirmPayment(HttpSession session) {
     	    Payment sessionPayment = (Payment) session.getAttribute("paymentinfo");
+    	    Integer eventid=(Integer)session.getAttribute("eventinfo");
+    	    Event event=eventdao.findById(eventid);
 
     	    if (sessionPayment != null) {
     	        sessionPayment.setStatus("Successful");
     	        paymentdao.updateEvent(sessionPayment);  // Assuming update is the correct method
 
-    	        Event event = sessionPayment.getEvent();
-    	        if (event != null) {
+    	        Event events = sessionPayment.getEvent();
+    	        if (events != null) {
     	            event.getPayments().add(sessionPayment); // Add payment to event's payment list
     	           
     	        }
     	    }
-
+    	    int avl_ticket=event.getAvl_ticket()-sessionPayment.getQuantity();
+    	    event.setAvl_ticket(avl_ticket);
+    	    session.removeAttribute("eventinfo");
+    	    
     	    session.removeAttribute("paymentinfo");
 
     	    ModelAndView mav = new ModelAndView();

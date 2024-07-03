@@ -36,7 +36,7 @@ public class AdminDao {
 	public void updateAdmin(Admin admin) {
 		et.begin();
 		em.merge(admin);
-		et.begin();
+		et.commit();
 	}
 
 	public void deleteById(int id) {
@@ -56,6 +56,18 @@ public class AdminDao {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+	public Admin forgotPassword(String email,Long mob) {
+		Query query=em.createQuery("select a from Admin a where a.email=?1 and a.mobilenumber=?2");
+		query.setParameter(1, email);
+		query.setParameter(2, mob);
+		try {
+			Admin admin = (Admin) query.getSingleResult();
+			return admin;
+		} catch (Exception e) {
+			return null;
+		}
+		
 	}
 
 

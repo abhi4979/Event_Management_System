@@ -49,9 +49,14 @@
                 </td>
             </tr>
             <tr>
+            <td>Image Url</td>
+            <td><td><form:input path="imageUrl" type="text" step="0.01" /></td></td>
+            </tr>
+            <tr>
                 <td colspan="2"><input type="submit" value="Submit" /></td>
             </tr>
         </table>
     </form:form>
 </body>
 </html>
+       

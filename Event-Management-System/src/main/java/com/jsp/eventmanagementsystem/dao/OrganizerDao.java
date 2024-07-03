@@ -10,6 +10,7 @@ import javax.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.jsp.eventmanagementsystem.entity.Admin;
 import com.jsp.eventmanagementsystem.entity.Event_Organizer;
 
 @Repository
@@ -66,5 +67,17 @@ public class OrganizerDao {
     	  Query query=em.createQuery("select a from Event_Organizer a");
     	  return query.getResultList();
       }
+      public Event_Organizer forgotPassword(String email,Long mob) {
+  		Query query=em.createQuery("select a from Event_Organizer a where a.email=?1 and a.mobilenumber=?2");
+  		query.setParameter(1, email);
+  		query.setParameter(2, mob);
+  		try {
+  			Event_Organizer org = (Event_Organizer) query.getSingleResult();
+  			return org;
+  		} catch (Exception e) {
+  			return null;
+  		}
+  		
+  	}
       
 	}

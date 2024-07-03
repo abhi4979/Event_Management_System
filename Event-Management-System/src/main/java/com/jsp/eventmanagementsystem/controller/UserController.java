@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.jsp.eventmanagementsystem.dao.EventDao;
 import com.jsp.eventmanagementsystem.dao.OrganizerDao;
 import com.jsp.eventmanagementsystem.dao.UserDao;
+import com.jsp.eventmanagementsystem.entity.Admin;
 import com.jsp.eventmanagementsystem.entity.Event;
 import com.jsp.eventmanagementsystem.entity.Event_Organizer;
 import com.jsp.eventmanagementsystem.entity.User;
@@ -23,6 +25,9 @@ import com.jsp.eventmanagementsystem.entity.User;
 public class UserController {
 	@Autowired
     UserDao dao;
+	
+	@Autowired
+	EventDao eventdao;
 	
 	@RequestMapping("/adduser")
 	public ModelAndView addUser() {
@@ -42,6 +47,7 @@ public class UserController {
 	}
 	@RequestMapping("/userloginvalidate")
 	public ModelAndView loginOrganizer(ServletRequest request,HttpSession session) {
+		       List<Event> event=eventdao.viewAllEvent();
 		        ModelAndView mav = new ModelAndView();
 		        try {
 		            String email = request.getParameter("email");
@@ -50,6 +56,7 @@ public class UserController {
 		            User user = dao.login(email, password);
 		            
 		            if (user != null) {
+		            	mav.addObject("eventobj", event);
 		                mav.setViewName("UserOptions");
 		                session.setAttribute("userinfo", user.getUser_id());
 		            } else {
@@ -120,6 +127,41 @@ public class UserController {
 	            mav.setViewName("redirect://viewallusers");
 	            return mav;
 	        
+	    }
+	 @RequestMapping("/forgotpasswordbyuser")
+	    public ModelAndView forgotPassword(ServletRequest request,HttpSession session) {
+	        String email = request.getParameter("email");
+	        Long mob = Long.parseLong(request.getParameter("mobilenumber")); // Corrected parameter name
+	        ModelAndView mav = new ModelAndView();
+	        User user = dao.forgotPassword(email, mob);
+	        if (user != null) {
+	            mav.setViewName("PassObjByUser");
+	            session.setAttribute("userid", user.getUser_id());
+	        } else {
+	            mav.addObject("message", "Invalid Credential");
+	            mav.setViewName("ForgotByUser");
+	        }
+	        return mav;
+	    }
+	    @RequestMapping("/newpbyuser")
+	    public ModelAndView newP() {
+	    	User a =new User();
+	    	ModelAndView mav=new ModelAndView();
+	    	mav.addObject("passwordobj", a);
+	    	mav.setViewName("PasswordCreateByUser");
+	    	return mav;
+	    }
+	    @RequestMapping("/savepasswordbyuser")
+	    public ModelAndView savePassword(@ModelAttribute("passwordobj")User a,HttpSession session) {
+	    	Integer userid=(Integer) session.getAttribute("userid");
+	    	User user=dao.findById(userid);
+	    	user.setPassword(a.getPassword());
+	    	dao.updateUser(user);
+	    	session.removeAttribute("userid");
+	    	ModelAndView mav=new ModelAndView();
+	    	mav.addObject("message", "Password Created Successfully");
+	    	mav.setViewName("UserLogin");
+	    	return mav;
 	    }
 	
 }

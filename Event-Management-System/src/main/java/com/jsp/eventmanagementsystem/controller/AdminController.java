@@ -3,6 +3,7 @@ package com.jsp.eventmanagementsystem.controller;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.hibernate.query.criteria.internal.expression.function.AggregationFunction.MAX;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -80,6 +81,41 @@ public class AdminController {
 	            mav.setViewName("errorPage");
 	        }
 	        return mav;
+	    }
+	    
+	    @RequestMapping("/forgotpassword")
+	    public ModelAndView forgotPassword(ServletRequest request,HttpSession session) {
+	        String email = request.getParameter("email");
+	        Long mob = Long.parseLong(request.getParameter("mobilenumber")); // Corrected parameter name
+	        ModelAndView mav = new ModelAndView();
+	        Admin admin = dao.forgotPassword(email, mob);
+	        if (admin != null) {
+	            mav.setViewName("PassObj");
+	            session.setAttribute("adminid", admin.getId());
+	        } else {
+	            mav.addObject("message", "Invalid Credential");
+	            mav.setViewName("ForgotPassword");
+	        }
+	        return mav;
+	    }
+	    @RequestMapping("/newp")
+	    public ModelAndView newP() {
+	    	Admin a =new Admin();
+	    	ModelAndView mav=new ModelAndView();
+	    	mav.addObject("passwordobj", a);
+	    	mav.setViewName("PasswordCreate");
+	    	return mav;
+	    }
+	    @RequestMapping("/savepassword")
+	    public ModelAndView savePassword(@ModelAttribute("passwordobj")Admin a,HttpSession session) {
+	    	Integer adminid=(Integer) session.getAttribute("adminid");
+	    	Admin admin=dao.findById(adminid);
+	    	admin.setPassword(a.getPassword());
+	    	dao.updateAdmin(admin);
+	    	ModelAndView mav=new ModelAndView();
+	    	mav.addObject("message", "Password Created Successfully");
+	    	mav.setViewName("adminlogin");
+	    	return mav;
 	    }
 	
 }

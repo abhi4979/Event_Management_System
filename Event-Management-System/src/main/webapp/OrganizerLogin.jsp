@@ -16,7 +16,7 @@
 				name="password" placeholder="Enter Password" required="required"><br>
 
 			<input type="submit" value="Login" id="btn">
-
+          <a href="ForgotByOrg.jsp">Forgot Password</a>
 		</form>
 </body>
 </html>
