@@ -47,7 +47,7 @@ header {
 }
 
 .logo-highlight {
-    color: #ffc107; /* Highlight color (you can choose your own) */
+    color: #ffc107; 
 }
 
 .nav {

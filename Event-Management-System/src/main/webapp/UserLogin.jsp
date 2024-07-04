@@ -92,6 +92,28 @@
         color: #666;
         line-height: 1.6;
     }
+      .content button{
+  background-color: #007bff;
+  padding: 12px 20px;
+      border-radius:10%;
+  }
+  .content a {
+    
+    color: #fff;
+    border: none;
+    text-decoration:none;
+
+    amrgin-top:30px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+
+  .content a:hover {
+    color: #0056b3;
+  }
+  
 </style>
 </head>
 <body>
@@ -111,7 +133,9 @@
         </div>
         <div class="content">
             <h2>Users in Eventify</h2>
-            <p>Users are the lifeblood of any system, product, or service. Understanding their needs, behaviors, and preferences is crucial for designing effective solutions and experiences. A user-centric approach revolves around putting users at the forefront of design and development processes.</p>
+            <p>Users are the lifeblood of any system, product, or service. Understanding their needs, behaviors, and preferences is crucial for designing effective solutions and experiences. A user-centric approach revolves around putting users at the forefront
+             of design and development processes.</p>
+              <button><a href="HomeProject.jsp">Back</a></button>
         </div>
     </div>
 </body>

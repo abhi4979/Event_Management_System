@@ -75,7 +75,7 @@ public class AdminController {
 	        try {
 	            session.invalidate();
 	            mav.addObject("message", "Logged out successfully");
-	            mav.setViewName("adminhome");
+	            mav.setViewName("adminlogin");
 	        } catch (Exception e) {
 	            mav.addObject("message", "An error occurred: " + e.getMessage());
 	            mav.setViewName("errorPage");

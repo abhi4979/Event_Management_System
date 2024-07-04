@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import com.jsp.eventmanagementsystem.dao.EventDao;
 import com.jsp.eventmanagementsystem.dao.OrganizerDao;
+import com.jsp.eventmanagementsystem.dao.UserDao;
 import com.jsp.eventmanagementsystem.entity.Event;
 import com.jsp.eventmanagementsystem.entity.Event_Organizer;
+import com.jsp.eventmanagementsystem.entity.Payment;
 import com.jsp.eventmanagementsystem.entity.User;
 
 @Controller
@@ -31,6 +33,9 @@ public class EventController {
     EventDao dao;
     @Autowired
     OrganizerDao orgdao;
+    
+    @Autowired
+    UserDao userdao;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -224,14 +229,7 @@ public class EventController {
           }
           return mav;
       }
-    @RequestMapping("/organizerlogout")
-    public ModelAndView organizerLogout(HttpSession session) {
-    	session.invalidate();
-    	ModelAndView mav=new ModelAndView();
-    	mav.addObject("message", "Logout Successfully");
-    	mav.setViewName("OrganizerHome");
-    	return mav;
-    }
+  
     
     @RequestMapping("/vieweventbyadmin")
 	public ModelAndView ViewAllEvent() {
@@ -287,6 +285,33 @@ public class EventController {
 	            return mav;
 	        
 	    }
-	   
-    	}
+	 @RequestMapping("/showevent")
+	 public ModelAndView showEvent(HttpSession session) {
+		 Integer organizer_id = (Integer) session.getAttribute("organizerinfo");
+         Event_Organizer org = orgdao.findById(organizer_id);
+         if (organizer_id == null) {
+             return new ModelAndView("redirect://OrganizerLogin.jsp");
+         }
+         
+         List<Event> events =org.getEvents();
+         ModelAndView mav = new ModelAndView();
+         mav.addObject("events", events);
+         mav.setViewName("ViewAllEvent");
+         return mav;
+	 }
+	@RequestMapping("/bookedevent")
+	public ModelAndView viewBookedEvent(HttpSession session) {
+		ModelAndView mav=new ModelAndView();
+		   Integer id=(Integer)session.getAttribute("userinfo");
+		   User user=userdao.findById(id);
+		   if(user ==null) {
+			return new ModelAndView("errorPage").addObject("message", "No Payment Found"); 
+		   }
+		   List<Payment> pay=user.getPayments();
+		   mav.addObject("bookedeventlist", pay);
+		   mav.setViewName("BookedEventList");
+		   return mav;
+	}
+	}
+    	
     

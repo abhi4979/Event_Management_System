@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-Please Click here to create new Password<a href="newpbyorg">click</a>
-   <a href="ForgotByOrg.jsp">Back</a>
+<h1>Please Click here to create new Password</h1><a href="newpbyorg" style="font-size: 20px;">click</a>
+   <a href="ForgotByOrg.jsp" style="font-size: 20px;">Back</a>
 </body>
 </html>

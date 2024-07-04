@@ -167,5 +167,12 @@ public class OrganizerController {
 	    	mav.setViewName("OrganizerLogin");
 	    	return mav;
 	    }
+	    @RequestMapping("/organizerlogout")
+	    public ModelAndView logout(HttpSession session) {
+	    	ModelAndView mav=new ModelAndView();
+	    	mav.addObject("message", "Logged out successfully");
+	    	mav.setViewName("OrganizerLogin");
+	    	return mav;
+	    }
 	
 }

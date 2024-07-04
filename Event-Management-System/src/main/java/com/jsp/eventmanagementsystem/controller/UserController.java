@@ -163,5 +163,22 @@ public class UserController {
 	    	mav.setViewName("UserLogin");
 	    	return mav;
 	    }
+	    @RequestMapping("/showuseroption")
+	    public ModelAndView showUserOption() {
+	    	 List<Event> event=eventdao.viewAllEvent();
+	    	 ModelAndView mav=new ModelAndView();
+	    	 mav.addObject("eventobj", event);
+             mav.setViewName("UserOptions");
+             return mav;
+	    }
+	    @RequestMapping("/userlogout")
+	    public ModelAndView userLogout(HttpSession session) {
+	    	session.invalidate();
+	    	ModelAndView mav=new ModelAndView();
+	    	mav.addObject("message", "Logout Successfully");
+	    	mav.setViewName("UserLogin");
+	    	return mav;
+	    	
+	    }
 	
 }

@@ -93,19 +93,29 @@
     line-height: 1.6;
     text-align: justify;
   }
-
+  .content button{
+  background-color: #007bff;
+  padding: 12px 20px;
+      border-radius:10%;
+  }
   .content a {
-    display: block;
-    text-align: center;
-    margin-top: 20px;
-    text-decoration: none;
-    color: #007bff;
-    transition: color 0.3s;
+    
+    color: #fff;
+    border: none;
+    text-decoration:none;
+
+    amrgin-top:30px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
   }
 
   .content a:hover {
     color: #0056b3;
   }
+  
+  
 </style>
 </head>
 <body>
@@ -128,7 +138,8 @@
     <div class="content">
       <h2>Users in Eventify</h2>
       <p>Users are the lifeblood of any system, product, or service. Understanding their needs, behaviors, and preferences is crucial for designing effective solutions and experiences. A user-centric approach revolves around putting users at the forefront of design and development processes.</p>
-      <p>Users encompass a diverse spectrum of individuals, each with unique characteristics, goals, and challenges. They interact with products or services to fulfill specific needs, whether personal, professional, or social.</p>
+      <p>Users encompass a diverse spectrum of individuals, each with unique characteristics, goals, and challenges. They interact with products or services to fulfill specific needs, whether personal, professional, or social.</p><br><br>
+       <button><a href="HomeProject.jsp">Back</a></button>
     </div>
   </div>
    <script>
@@ -164,7 +175,6 @@
                     event.preventDefault();
                     return;
                 }
-
                 // Validate password
                 const password = passwordInput.value;
                 const minLength = 8;
@@ -172,7 +182,6 @@
                 const hasLowerCase = /[a-z]/.test(password);
                 const hasDigit = /\d/.test(password);
                 const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-
                 if (password.length < minLength || !hasUpperCase || !hasLowerCase || !hasDigit || !hasSpecialChar) {
                     alert("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.");
                     event.preventDefault();
@@ -180,9 +189,6 @@
                 }
 
                
-
-              
-
             });
         });
     </script>

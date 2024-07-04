@@ -66,9 +66,39 @@ public class PaymentController {
         mav.setViewName("QuantityForm");
         return mav;
     }
+    @RequestMapping("/bookeventback")
+    public ModelAndView bookEventBack(@RequestParam(value = "id", required = true) String idStr, HttpSession session) {
+        Integer id = null;
+        id = Integer.parseInt(idStr);
+        System.out.println("Received id: " + id);
+        Integer user_id = (Integer) session.getAttribute("userinfo");
+        User user=userdao.findById(user_id);
+        if (user == null) {
+            System.out.println("User not found in session.");
+            return new ModelAndView("redirect:/login"); // Handle error appropriately
+        }
+        Event event = eventdao.findById(id);
+        if (event == null) {
+            System.out.println("Event not found for id: " + id);
+            return new ModelAndView("errorPage"); // Handle error appropriately
+        }
+        Payment payment = new Payment();
+        payment.setUsername(user.getName());
+        payment.setEventname(event.getName());
+        payment.setAmount(event.getTicket_price());
+        payment.setQuantity(1);
+        payment.setStatus("UnSuccessful");
+        session.setAttribute("eventinfo", event.getEvent_id());
+        session.setAttribute("paymentinfo", payment);
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("paymentobj", payment);
+        mav.setViewName("QuantityForm");
+        return mav;
+    }
 
     @RequestMapping("/savepayment")
     public ModelAndView savePayment(@ModelAttribute("paymentobj") Payment payment, HttpSession session) {
+    	 ModelAndView mav = new ModelAndView();
         Payment sessionPayment = (Payment) session.getAttribute("paymentinfo");
         Integer user=(Integer)session.getAttribute("userinfo");
         Integer event=(Integer)session.getAttribute("eventinfo");
@@ -77,23 +107,27 @@ public class PaymentController {
 
         if (sessionPayment == null) {
             System.out.println("Payment info not found in session.");
-            return new ModelAndView("errorPage"); // Handle error appropriately
+            return new ModelAndView("errorPage");
         }
 
-        // Update session payment details with the user input
+        if(event_id.getAvl_ticket()==0) {
+             return new ModelAndView("errorPage").addObject("message", "Ticket is not Available");
+        }
+        else if(event_id.getAvl_ticket() >= payment.getQuantity()) {
         sessionPayment.setQuantity(payment.getQuantity());
         sessionPayment.setAmount(sessionPayment.getAmount() * payment.getQuantity());
 
         // Save payment to database
         sessionPayment.setUser(user_id);
         sessionPayment.setEvent(event_id);
-        paymentdao.savePayment(sessionPayment);
-
-
-        ModelAndView mav = new ModelAndView();
+        paymentdao.savePayment(sessionPayment); 
         mav.addObject("paymentobj", sessionPayment );
         mav.setViewName("PaymentConfirmation");
         return mav;
+        }
+        else {
+        	 return new ModelAndView("errorPage").addObject("message", "No. Of Ticket you try to book is not available,please select less no. of amount");
+        }
     }
     	@RequestMapping("/confirmpayment")
     	public ModelAndView confirmPayment(HttpSession session) {
@@ -113,6 +147,7 @@ public class PaymentController {
     	    }
     	    int avl_ticket=event.getAvl_ticket()-sessionPayment.getQuantity();
     	    event.setAvl_ticket(avl_ticket);
+    	    eventdao.updateEvent(event);
     	    session.removeAttribute("eventinfo");
     	    
     	    session.removeAttribute("paymentinfo");
