@@ -33,7 +33,7 @@
     }
    .container form button {
         background-color: #007bff;
-        width: 70%; /* Make the button full width */
+        width: 70%; 
         padding: 10px;
         margin-top: 10px;
         margin-left:50px;

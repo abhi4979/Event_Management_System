@@ -83,7 +83,7 @@
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0,0,0,0.1);
         width: 400px;
-        margin-left: 20px; /* Adjust margin as needed */
+        margin-left: 20px; 
     }
     .content h2 {
         color: #333;

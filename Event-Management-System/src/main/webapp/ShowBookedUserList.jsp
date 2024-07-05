@@ -126,9 +126,9 @@
         <span class="logo">Event<span class="logo-highlight">ify</span></span>
     </div>
     <div class="icons">
-        <a href="showuseroption"><i class="fas fa-arrow-left" style="color: black;"></i></a>
+        <a href="OrganizerOptions.jsp"><i class="fas fa-arrow-left" style="color: black;"></i></a>
         <a href="HomeProject.jsp"><i class="fas fa-home" style="color: black;"></i></a>
-        <a href="userlogout"><i class="fas fa-sign-out-alt" style="color:black;"></i></a>
+        <a href="organizerlogout"><i class="fas fa-sign-out-alt" style="color:black;"></i></a>
     </div>
 </div>
 <div class="container">

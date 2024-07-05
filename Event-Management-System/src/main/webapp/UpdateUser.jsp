@@ -154,9 +154,9 @@
         <span class="logo">Event<span class="logo-highlight">ify</span></span>
     </div>
     <div class="icons">
-    <a href="showevent"><i class="fas fa-arrow-left" style="color: black;"></i></a>
+    <a href="viewallusers"><i class="fas fa-arrow-left" style="color: black;"></i></a>
         <a href="HomeProject.jsp"><i class="fas fa-home" style="color: black;"></i></a>
-        <a href="organizerlogout"><i class="fas fa-sign-out-alt" style="color:black;"></i></a>
+        <a href="adminlogout"><i class="fas fa-sign-out-alt" style="color:black;"></i></a>
     </div>
 </div>
 <div class="main-content">

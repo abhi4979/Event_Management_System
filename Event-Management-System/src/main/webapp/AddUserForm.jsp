@@ -84,7 +84,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 50px;
     border-radius: 10px;
-    margin-top: 20px; /* Adjust as needed */
+    margin-top: 20px; 
   }
 
   .form-container {

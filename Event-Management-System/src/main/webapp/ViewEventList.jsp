@@ -1,7 +1,6 @@
-<%@page import="com.jsp.eventmanagementsystem.entity.Event"%>
-<%@page import="java.util.List"%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" %>
+<%@ page import="com.jsp.eventmanagementsystem.entity.Event" %>
+<%@ page import="java.util.List" %>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -47,9 +46,7 @@
         align-items: center;
     }
 
-    .navbar .icons a {
-        margin-left: 15px;
-    }
+   
       .logo-container {
     display: flex;
     align-items: center;
@@ -95,29 +92,39 @@
 </head>
 <body>
 
+<div class="navbar">
+    <div class="logo-container">
+         <span class="logo">Event<span class="logo-highlight">ify</span></span>
+    </div>
+    <div class="icons">
+        <a href="FilterEvent.jsp"><i class="fas fa-arrow-left" style="color: black; font-size: 34px;"></i></a>
+        <a href="showuseroption">Back to menu</a>
+        <a href="userlogout"><i class="fas fa-sign-out-alt" style="color:black; font-size: 34px"></i></a>
+    </div>
+</div>
 
 <div class="content">
-    <h1 style="font-size: 30px;"> Events list</h1>
-    <% List<Event> events = (List<Event>) request.getAttribute("eventlist"); %>
-    <% if (events != null) { 
-        for (Event event : events) { %>
-            <div class="event">
-                <div><img src="<%= event.getImageUrl() %>" alt="Event Image"></div>
-                <h2><%= event.getName() %></h2>
-                <p><strong>Description:</strong> <%= event.getDescription() %></p>
-                <p><strong>Date:</strong> <%= event.getDate() %></p>
-                <p><strong>Time:</strong> <%= event.getTime() %></p>
-                <p><strong>Location:</strong> <%= event.getLocation() %></p>
-                <p><strong>Available Tickets:</strong> <%= event.getAvl_ticket() %></p>
-                <p><strong>Ticket Price:</strong> <%= event.getTicket_price() %></p>
-                <p><strong>Type:</strong> <%= event.getType() %></p>
-                <button><a href="bookevent?id=<%= event.getEvent_id() %>">Book</a></button>
-            </div>
-    <%   } %>
-     <% }else{ %>
-       <h1>No record found</h1>
-       <%} %>
-</div>
+        <h1>Events List</h1>
+        <% List<Event> events = (List<Event>) request.getAttribute("eventlist"); %>
+        <% if (events != null && !events.isEmpty()) { 
+            for (Event event : events) { %>
+                <div class="event">
+                    <div><img src="<%= event.getImageUrl() %>" alt="Event Image"></div>
+                    <h2><%= event.getName() %></h2>
+                    <p><strong>Description:</strong> <%= event.getDescription() %></p>
+                    <p><strong>Date:</strong> <%= event.getDate() %></p>
+                    <p><strong>Time:</strong> <%= event.getTime() %></p>
+                    <p><strong>Location:</strong> <%= event.getLocation() %></p>
+                    <p><strong>Available Tickets:</strong> <%= event.getAvl_ticket() %></p>
+                    <p><strong>Ticket Price:</strong> <%= event.getTicket_price() %></p>
+                    <p><strong>Type:</strong> <%= event.getType() %></p>
+                    <button><a href="bookevent?id=<%= event.getEvent_id() %>">Book</a></button>
+                </div>
+        <%   } 
+        } else { %>
+            <h1>No records found</h1>
+        <% } %>
+    </div>
 
 </body>
 </html>

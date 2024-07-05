@@ -120,7 +120,7 @@
     </div>
     <div class="icons">
         <a href="showuseroption"><i class="fas fa-arrow-left" style="color: black; font-size: 34px;"></i></a>
-        <a href="userlogout"><i class="fas fa-sign-out-alt" style="color:black;"></i></a>
+        <a href="userlogout"><i class="fas fa-sign-out-alt" style="color:black;font-size: 34px;" ></i></a>
     </div>
 </div>
 

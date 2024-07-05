@@ -83,7 +83,7 @@
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0,0,0,0.1);
         width: 400px;
-        margin-left: 20px; /* Adjust margin as needed */
+        margin-left: 20px; 
     }
     .content h2 {
         color: #333;
@@ -127,7 +127,7 @@
 
                 <input type="submit" value="Login">
                 <div class="forgot-password">
-                    <a href="ForgotByUser.jsp">Forgot Password?</a>
+                    <a href="ForgotPassword.jsp">Forgot Password?</a>
                 </div>
             </form>
         </div>

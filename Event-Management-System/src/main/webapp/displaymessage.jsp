@@ -8,6 +8,6 @@
 </head>
 <body>
 <h1>${message}</h1>
-<a href="OrganizerHome.jsp">Go to Home Page</a>
+<a href="HomeProject.jsp">Go to Home Page</a>
 </body>
 </html>

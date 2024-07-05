@@ -79,7 +79,7 @@
   }
 
   .content {
-    width: 50%; /* Adjust width as needed */
+    width: 50%; 
     padding: 20px;
   }
 
